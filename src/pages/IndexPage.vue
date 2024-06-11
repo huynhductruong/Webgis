@@ -6,7 +6,7 @@
     </q-page-sticky>
     <q-page-sticky class="stickyClass" position="top-left" :offset="[stickCenterX, 10]">
       <div style="display: flex; flex-direction: row; gap: 10px">
-        <FloatSearch data-html2canvas-ignore />
+        <div id="search"></div>
         <button @click="wms_layers">Open Modal</button>
         <FloatZoom data-html2canvas-ignore />
       </div>
@@ -94,7 +94,6 @@ import _isEmpty from "lodash/isEmpty";
 import { useQuasar } from "quasar";
 import { i18n } from "boot/i18n.js";
 import { $bus } from "boot/bus.js";
-import FloatSearch from "src/components/floatSearch/index.vue";
 import FloatDetail from "src/components/floatDetail/index.vue";
 import FloatControl from "src/components/floatControl/index.vue";
 import FloatZoom from "src/components/floatZoom.vue";
@@ -105,10 +104,10 @@ import { LAYER_TYPE, FEATURE_TYPE } from "src/constants/enum";
 import { transformExtent } from 'ol/proj';
 import LayerSwitcher from 'ol-layerswitcher';
 import $ from 'jquery';
+import Geocoder from 'ol-geocoder';
 export default defineComponent({
   name: "IndexPage",
   components: {
-    FloatSearch,
     FloatDetail,
     FloatControl,
     FloatZoom
@@ -493,6 +492,15 @@ export default defineComponent({
 
       ],
     }))
+    const geocoder = ref(new Geocoder('nominatim', { 
+            provider: 'osm',
+            lang: 'en',
+            placeholder: 'Search for ...',
+            limit: 5,
+            debug: false,
+            autoComplete: true,
+            keepOpen: true,
+        }))
     const view = ref(
       new View({
         zoom: 0,
@@ -521,6 +529,9 @@ export default defineComponent({
       unref(map).addLayer(unref(overlayers))
       unref(map).addLayer(unref(layerForImage))
       unref(map).addControl(unref(layerSwitcher))
+      unref(map).addControl(unref(geocoder))
+      var geocoderElement = document.querySelector('.gcd-gl-control');
+      document.getElementById('search').appendChild(geocoderElement);
       legend()
     });
 
@@ -661,7 +672,9 @@ export default defineComponent({
         .catch(error => {
           console.error('Error fetching capabilities:', error);
         });
-      this.data = [...this.data, await this.getFeatureGridCodes(this.layer_name)]
+      let chartData_custom = await this.getFeatureGridCodes(this.layer_name)
+      chartData_custom.title = this.layer_name
+      this.data = [...this.data, chartData_custom]
       this.layerSwitcher.renderPanel()
       this.legend();
       this.showModal = false;
@@ -832,5 +845,11 @@ body {
   z-index: 600;
   bottom: 2%;
   right: 0%;
+}
+#search{
+  min-width: 300px;
+  margin-left: 20px;
+  display: flex;
+  align-items: center
 }
 </style>

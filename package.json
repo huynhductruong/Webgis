@@ -34,6 +34,7 @@
     "multer": "^1.4.5-lts.1",
     "node-fetch": "^2.6.11",
     "ol": "^7.3.0",
+    "ol-geocoder": "^4.3.3",
     "ol-layerswitcher": "^4.1.1",
     "pinia": "^2.0.35",
     "pinia-plugin-persistedstate": "^3.1.0",

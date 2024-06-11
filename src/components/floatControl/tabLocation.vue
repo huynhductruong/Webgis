@@ -30,13 +30,15 @@ export default defineComponent({
         canvas.id = canvasId;
         canvasContainer.appendChild(canvas);
         document.getElementById('chart-wrapper').appendChild(canvasContainer);
-
+        const entries = Object.entries(data_chart);
+        const slicedEntries = entries.slice(0, 6);
+        const slicedObj = Object.fromEntries(slicedEntries);
         const data = {
           labels: ["Sông, nước", "Đất công nghiệp", "Đất ở", "Rừng thưa", "Rừng tươi tốt", "Rừng rậm"],
           datasets: [
             {
               label: index.toString(),
-              data: Object.values(data_chart),
+              data: Object.values(slicedObj),
               backgroundColor: [
                 'rgba(160,255,255)',
                 'rgba(250, 170, 160)',
@@ -66,7 +68,7 @@ export default defineComponent({
               },
               title: {
                 display: true,
-                text: 'Chart.js Doughnut Chart'
+                text: `Hiện trạng sử dụng đất: ${data_chart.title}`
               },
               datalabels: {
                 formatter: (value, ctx) => {
