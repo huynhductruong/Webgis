@@ -8,6 +8,8 @@
 import { defineComponent, onMounted, watch, ref } from 'vue';
 import Chart from 'chart.js/auto';
 import $ from 'jquery';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
+Chart.register(ChartDataLabels);
 export default defineComponent({
   name: 'ChartComponent',
   props: {
@@ -30,7 +32,7 @@ export default defineComponent({
         document.getElementById('chart-wrapper').appendChild(canvasContainer);
 
         const data = {
-          labels: Object.keys(data_chart),
+          labels: ["Sông, nước", "Đất công nghiệp", "Đất ở", "Rừng thưa", "Rừng tươi tốt", "Rừng rậm"],
           datasets: [
             {
               label: index.toString(),
@@ -42,7 +44,6 @@ export default defineComponent({
                 '#036b05',
                 '#27c50b',
                 'rgba(75, 192, 192, 0.2)',
-
               ],
               borderColor: data_chart.borderColor || '#000',
               borderWidth: data_chart.borderWidth || 1,
@@ -57,11 +58,31 @@ export default defineComponent({
             responsive: true,
             plugins: {
               legend: {
-                position: 'top',
+                position: 'right',
+                labels: {
+                  boxWidth: 15, 
+                  padding: 20,  
+                },
               },
               title: {
                 display: true,
                 text: 'Chart.js Doughnut Chart'
+              },
+              datalabels: {
+                formatter: (value, ctx) => {
+                  let sum = 0;
+                  let dataArr = ctx.chart.data.datasets[0].data;
+                  dataArr.map(data => {
+                    sum += data;
+                  });
+                  let percentage = (value * 100 / sum).toFixed(2) + "%";
+                  return percentage;
+                },
+                color: '#000',
+                font: {
+                  weight: 'bold',
+                  size: '8'
+                }
               }
             }
           },
@@ -92,8 +113,9 @@ export default defineComponent({
 <style lang="scss" scoped>
 #chart-wrapper {
   display: flex;
-  max-width: 303px; 
-  overflow-x: auto; 
+  max-width: 300px;
+  overflow-x: auto;
   margin-bottom: 5%;
+  margin-left: 10px;
 }
 </style>
