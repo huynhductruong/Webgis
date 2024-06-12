@@ -1,13 +1,18 @@
 <template>
   <div ref="mapRoot" class="mapView">
-    <q-page-sticky class="stickyClass" position="top-left" :offset="[10, 10]">
+    <q-page-sticky class="stickyClass" style="z-index: 999999999;" position="top-left" :offset="[10, 10]">
       <FloatControl data-html2canvas-ignore v-bind="{ map: map, view: view }" :chartData="data"
         @closePopup="closePopup" />
     </q-page-sticky>
-    <q-page-sticky class="stickyClass" position="top-left" :offset="[stickCenterX, 10]">
-      <div style="display: flex; flex-direction: row; gap: 10px">
+    <q-page-sticky class="stickyClass" style="justify-self: center; width: 50%;" position="top" :offset="[10, 10]">
+      <div class="horizontal-layout">
         <div id="search"></div>
-        <button @click="wms_layers">Open Modal</button>
+        <button class="op_modal_btn" @click="wms_layers">Thêm layer</button>
+      </div>
+    </q-page-sticky>
+    <q-page-sticky class="stickyClass" position="top-right" :offset="[10, 10]">
+      <div style="display: flex; flex-direction: row; gap: 10px">
+
         <FloatZoom data-html2canvas-ignore />
       </div>
     </q-page-sticky>
@@ -22,25 +27,24 @@
     <div ref="popupContent"></div>
   </div>
   <div id="legend"></div>
-  <button @click="show_hide_legend" type="button" id="legend_btn" class="btn btn-success btn-sm">☰ Show
+  <button @click="show_hide_legend" type="button" id="legend_btn" class="btn-show-legend">☰ Show
     Legend</button>
   <div>
     <modal v-if="showModal" @close="closeModal" class="modal_AWS">
       <modal-dialog>
         <modal-header>
-          <h3>AWS Layer</h3>
-          <button type="button" class="close-modal" @click="closeModal">
-            <span>&times;</span>
-          </button>
+          <h3 class="modal-title">Danh sách các layer</h3>
+          <span class="close-modal" @click="closeModal">&#10060;</span>
         </modal-header>
         <modal-body>
           <table id="table_wms_layers">
           </table>
         </modal-body>
-        <modal-footer>
-          <button @click="closeModal">Close</button>
-          <button @click="addLayer">Close</button>
-        </modal-footer>
+        <div class="modal-footer">
+          <button @click="closeModal" style="background-color: red">Close</button>
+          <button @click="addLayer" style="background-color: rgb(57, 230, 42); color: black; font-weight:bold">Add
+            Layer</button>
+        </div>
       </modal-dialog>
 
     </modal>
@@ -225,7 +229,7 @@ export default defineComponent({
         var element = document.getElementById("legend");
         element.appendChild(head);
         var img = new Image();
-        img.src = "http://localhost:8084/geoserver/wms?REQUEST=GetLegendGraphic&VERSION=1.0.0&FORMAT=image/png&WIDTH=20&HEIGHT=20&LAYER=" + layer.get('title');
+        img.src = "http://localhost:8084/geoserver/HienTrangSDD/wms?REQUEST=GetLegendGraphic&VERSION=1.0.0&FORMAT=image/png&WIDTH=20&HEIGHT=20&LAYER=" + layer.get('title');
         var src = document.getElementById("legend");
         src.appendChild(img);
 
@@ -492,15 +496,15 @@ export default defineComponent({
 
       ],
     }))
-    const geocoder = ref(new Geocoder('nominatim', { 
-            provider: 'osm',
-            lang: 'en',
-            placeholder: 'Search for ...',
-            limit: 5,
-            debug: false,
-            autoComplete: true,
-            keepOpen: true,
-        }))
+    const geocoder = ref(new Geocoder('nominatim', {
+      provider: 'osm',
+      lang: 'en',
+      placeholder: 'Search for ...',
+      limit: 5,
+      debug: false,
+      autoComplete: true,
+      keepOpen: true,
+    }))
     const view = ref(
       new View({
         zoom: 0,
@@ -544,6 +548,7 @@ export default defineComponent({
     const showModal = ref(false);
     let layer_name = ref("");
     const data = ref([]);
+
     return {
       showModal,
       legend,
@@ -586,7 +591,7 @@ export default defineComponent({
         const layers = xmlDoc.querySelectorAll("Layer > Layer");
         const table = document.getElementById("table_wms_layers");
 
-        table.innerHTML = '<tr><th>Name</th><th>Title</th><th>Abstract</th></tr>';
+        table.innerHTML = '<tr"><th style="min-width: 30%;">Name</th><th  style="min-width: 30%;">Title</th><th  style="min-width: 40%;">Abstract</th></tr>';
 
         layers.forEach(layer => {
           const name = layer.querySelector("Name").textContent;
@@ -594,7 +599,7 @@ export default defineComponent({
           const abstract = layer.querySelector("Abstract").textContent;
 
           const row = document.createElement("tr");
-          row.innerHTML = `<td>${name}</td><td>${title}</td><td>${abstract}</td>`;
+          row.innerHTML = `<td style="min-width: 30%;">${name}</td><td style="min-width: 30%;">${title}</td><td style="min-width: 40%;">${abstract}</td>`;
           table.appendChild(row);
         });
 
@@ -672,19 +677,19 @@ export default defineComponent({
         .catch(error => {
           console.error('Error fetching capabilities:', error);
         });
-      let chartData_custom = await this.getFeatureGridCodes(this.layer_name)
-      chartData_custom.title = this.layer_name
-      this.data = [...this.data, chartData_custom]
       this.layerSwitcher.renderPanel()
       this.legend();
       this.showModal = false;
+      let chartData_custom = await this.getFeatureGridCodes(this.layer_name)
+      chartData_custom.title = this.layer_name
+      this.data = [...this.data, chartData_custom]
     },
     show_hide_legend() {
 
       if (document.getElementById("legend").style.visibility == "hidden") {
 
         document.getElementById("legend_btn").innerHTML = "☰ Hide Legend";
-        document.getElementById("legend_btn").setAttribute("class", "btn btn-danger btn-sm");
+        document.getElementById("legend_btn").setAttribute("class", "btn-hide-legend");
 
         document.getElementById("legend").style.visibility = "visible";
         document.getElementById("legend").style.width = "15%";
@@ -692,7 +697,7 @@ export default defineComponent({
         document.getElementById('legend').style.height = '38%';
         unref(this.map).updateSize();
       } else {
-        document.getElementById("legend_btn").setAttribute("class", "btn btn-success btn-sm");
+        document.getElementById("legend_btn").setAttribute("class", "btn-show-legend");
         document.getElementById("legend_btn").innerHTML = "☰ Show Legend";
         document.getElementById("legend").style.width = "0%";
         document.getElementById("legend").style.visibility = "hidden";
@@ -702,13 +707,16 @@ export default defineComponent({
       }
     },
     getFeatureGridCodes(layer_name_set) {
-      var url = `http://localhost:8084/geoserver/HienTrangSDD/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=${layer_name_set}&outputFormat=application/json`;
+      var url = `http://localhost:8084/geoserver/HienTrangSDD1/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=${layer_name_set}&outputFormat=application/json`;
       return new Promise(resolve => {
         $.getJSON(url, function (data) {
           const array = data.features
           let new_data = {}
           for (let i = 1; i <= 6; i++) {
-            const count = array.filter(item => item.properties.gridcode === i).length;
+            const count = array.reduce((sum, item) => {
+              if(item.properties.gridcode === i) return sum + item.properties.Shape_Area
+              return sum
+            }, 0.0);
             new_data = {
               ...new_data,
               [i]: count
@@ -792,12 +800,13 @@ body {
   position: relative;
   position: fixed;
   z-index: 9999;
-  left: 20%;
-  top: 20%;
-  width: 60%;
+  left: 25%;
+  top: 30%;
+  width: 50%;
   max-height: 60%;
   overflow: auto;
   background-color: #fff;
+  border-radius: 5px;
   /* Semi-transparent background */
 }
 
@@ -805,14 +814,15 @@ body {
   position: absolute;
   top: 2%;
   right: 1%;
-
+  cursor: pointer;
 }
 
 #table_wms_layers {
   white-space: nowrap;
   grid-template-areas: "head-fixed" "body-scrollable";
   width: 100%;
-  background-color: #fff
+  background-color: #fff;
+  padding: 0px 10px 0px 10px;
 }
 
 #table_wms_layers th {
@@ -823,12 +833,15 @@ body {
   background-color: rgb(122, 209, 100);
 }
 
+#table_wms_layers tr {
+  cursor: pointer;
+}
+
 #legend {
-  z-index: 11;
   padding: 2px 4px;
   border: 1px solid grey;
   position: absolute;
-  bottom: 7%;
+  bottom: 8%;
   height: 0%;
   overflow: scroll;
   width: 0%;
@@ -837,7 +850,6 @@ body {
   background-color: #ffffff;
   font-weight: bold;
   visibility: hidden;
-
 }
 
 #legend_btn {
@@ -845,11 +857,85 @@ body {
   z-index: 600;
   bottom: 2%;
   right: 0%;
+  height: 35px;
+  border-radius: 5px;
+  color: black;
+  padding: 5px 10px 5px 10px;
+  font-weight: bold;
+  width: 140px;
 }
-#search{
+
+#search {
   min-width: 300px;
-  margin-left: 50px;
+  margin-left: 150px;
+  height: 40px;
   display: flex;
-  align-items: center
+  align-items: center;
+  // justify-content:center;
+  background-color: #fff;
+  border-radius: 15px;
+}
+
+.op_modal_btn {
+  background: linear-gradient(140deg, #00FF00 0%, #00FF33 50%, #00FF66 100%);
+  color: #484848;
+  border-radius: 10px;
+  margin-left: 50px;
+  height: 40px;
+  padding: 5px 30px 5px 30px;
+}
+
+.btn-show-legend {
+  background-color: rgb(9, 212, 46);
+  color: #fff;
+}
+
+.btn-hide-legend {
+  background-color: rgb(212, 9, 36);
+  color: #fff !important;
+}
+
+.horizontal-layout {
+  display: flex;
+  justify-content: center;
+  /* Centers the items horizontally within the container */
+  align-items: center;
+  /* Vertically centers the items (optional) */
+  gap: 10px;
+  /* Adds space between the items */
+  width: 100%;
+  /* Ensures the layout takes the full width of the container */
+  height: 50px;
+}
+
+.modal-title {
+  text-align: center;
+  margin-top: 10px;
+  font-weight: bold;
+  padding: 5px;
+}
+
+.modal-footer {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  padding: 0px 10px 20px 0px;
+  margin-top: 20px;
+
+  button {
+    margin-left: 10px;
+    display: flex;
+    min-width: 100px;
+    justify-content: center;
+    padding: 5px 10px 5px 10px;
+    border-radius: 3px;
+    color: #fff;
+
+    &:hover {
+      background-color: brown;
+      color: #fff;
+      transition: ease .3s;
+    }
+  }
 }
 </style>

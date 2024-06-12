@@ -85,7 +85,7 @@ export default {
   Update: "Cập nhật",
   // search result
   "No results": "Không tìm thấy kết quả",
-  Location: "Địa điểm",
+  Chart: "Biểu đồ",
   // displayhtml
   Owner: "Người sở hữu",
   "Soil type": "Loại đất",

@@ -43,9 +43,9 @@ export default defineComponent({
                 'rgba(160,255,255)',
                 'rgba(250, 170, 160)',
                 'rgba(255,180,255)',
-                '#036b05',
+                '#49f434',
                 '#27c50b',
-                'rgba(75, 192, 192, 0.2)',
+                '#036b05',
               ],
               borderColor: data_chart.borderColor || '#000',
               borderWidth: data_chart.borderWidth || 1,
@@ -62,8 +62,8 @@ export default defineComponent({
               legend: {
                 position: 'right',
                 labels: {
-                  boxWidth: 15, 
-                  padding: 20,  
+                  boxWidth: 15,
+                  padding: 20,
                 },
               },
               title: {
@@ -80,7 +80,7 @@ export default defineComponent({
                   let percentage = (value * 100 / sum).toFixed(2) + "%";
                   return percentage;
                 },
-                color: '#000',
+                color: 'black',
                 font: {
                   weight: 'bold',
                   size: '8'

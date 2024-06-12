@@ -3,8 +3,8 @@
     <q-uploader ref="uploaderRef" label="Custom header" multiple color="secondary" style="max-width: 300px"
       :filter="checkFileType" max-file-size="50000000" accept=".json" @added="addEvent" @removed="removeEvent"
       @rejected="onRejected">
-      <template v-slot:header="scope">
-        <div class="row no-wrap items-center q-pa-sm q-gutter-xs">
+      <template v-slot:header="scope" >
+        <div class="row no-wrap items-center q-pa-sm q-gutter-xs q-uploader__spinner">
           <q-btn v-if="scope.queuedFiles.length > 0" icon="clear_all" @click="scope.removeQueuedFiles" round dense flat>
             <q-tooltip>{{ $t("Clear all") }}</q-tooltip>
           </q-btn>
@@ -19,7 +19,7 @@
               {{ scope.uploadSizeLabel }} / {{ scope.uploadProgressLabel }}
             </div>
           </div>
-          <q-btn v-if="scope.canAddFiles" type="a" icon="add_box" @click="scope.pickFiles" round dense flat>
+          <q-btn v-if="scope.canAddFiles" type="a" icon="add_box" @click="scope.pickFiles" round dense flat class="custom-upload-button">
             <q-uploader-add-trigger />
             <q-tooltip>{{ $t("Pick Files") }}</q-tooltip>
           </q-btn>
@@ -436,5 +436,19 @@ export default defineComponent({
 
 .ol-tooltip-static:before {
   border-top-color: #3366ff;
+}
+
+.custom-upload-button {
+  background-color: #fff;
+  color: black;
+}
+
+.q-uploader__spinner {
+  background-color: #fff;
+  color: black;
+}
+
+.col {
+  color: black;  
 }
 </style>

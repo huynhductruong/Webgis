@@ -1,6 +1,6 @@
 <template>
   <q-layout view="hHh Lpr lFf">
-    <q-header elevated>
+    <q-header class="cus-header" elevated>
       <q-toolbar>
         <q-btn
           flat
@@ -11,7 +11,12 @@
           @click="toggleLeftDrawer"
         />
 
-        <q-toolbar-title> GIS App </q-toolbar-title>
+      <q-toolbar-title>
+        <q-icon class="logo">
+          <img src="~assets/gis-logo.png" alt="">
+        </q-icon>
+      </q-toolbar-title>
+
         <q-avatar>
           <img v-if="profile?.picture" :src="profile?.picture">
           <img v-else src="~assets/account.jpg">
@@ -147,3 +152,20 @@ export default defineComponent({
   },
 });
 </script>
+
+<style lang="scss">
+html,
+body{
+  width: 100%;
+  height: 100%;
+}
+
+
+.cus-header{
+  background-color: black;
+}
+.logo{
+  width: 90px;
+  height: 70px;
+}
+</style>

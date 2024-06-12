@@ -85,7 +85,7 @@ export default {
   Update: 'Update',
   // search result
   'No results': 'No results',
-  'Location': 'Location',
+  'Chart': 'Chart',
   // displayhtml
   'Owner': 'Owner',
   'Soil type': 'Soil type',

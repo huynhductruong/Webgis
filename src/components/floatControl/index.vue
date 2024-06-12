@@ -1,7 +1,7 @@
 <template>
   <div>
     <q-card class="my-card" flat bordered style="">
-      <q-tabs v-model="tabModel" class="bg-secondary text-white" style="min-height: 56px;">
+      <q-tabs v-model="tabModel" class=" text-black" style="min-height: 56px;">
         <q-tab v-for="(tab, index) of tabList" :key="index" :label="tab.label" :name="tab.component" @click="() => {
           expanded = true;
         }
@@ -36,14 +36,14 @@ import {
 import { useQuasar } from "quasar";
 import { i18n } from "boot/i18n.js";
 import TabAction from 'src/components/floatControl/tabAction.vue';
-import TabLocation from 'src/components/floatControl/TabLocation.vue';
+import TabChart from 'src/components/floatControl/TabChart.vue';
 import TabUpload from 'src/components/floatControl/TabUpload.vue';
 
 export default defineComponent({
   name: "FloatControl",
   components: {
     "tab-action": TabAction,
-    "tab-location": TabLocation,
+    "tab-chart": TabChart,
     "tab-upload": TabUpload,
   },
   props: {
@@ -84,8 +84,8 @@ export default defineComponent({
         },
       },
       {
-        label: $t('Location'),
-        component: 'tab-location',
+        label: $t('Chart'),
+        component: 'tab-chart',
         props: {
           tab: tabModel,
           chartData: props.chartData,
@@ -119,5 +119,9 @@ body {
 .panelClass {
   padding: 0;
   display: grid;
+}
+
+.text-black{
+  background-color: #FFCC33;
 }
 </style>
