@@ -1,5 +1,6 @@
-<template>
-  <q-item v-if="to && show" clickable :to="to">
+<template >
+  <div >
+    <q-item v-if="to && show" clickable :to="to">
     <q-item-section v-if="icon" avatar>
       <q-icon :name="icon" />
     </q-item-section>
@@ -46,6 +47,7 @@
       </q-card-section>
     </q-card>
   </q-expansion-item>
+  </div>
 </template>
 
 <script>
@@ -112,5 +114,9 @@ export default defineComponent({
     .q-item.q-item-type.q-item--dense.q-item--clickable {
       min-height: 48px !important;
     }
+}
+
+.q-item:hover .q-item-label, .q-item:focus .q-item-label {
+  color: #fff !important; /* Màu chữ khi di chuột qua hoặc tập trung */
 }
 </style>

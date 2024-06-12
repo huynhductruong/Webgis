@@ -22,7 +22,8 @@ export default defineComponent({
     const chartInstances = ref([]);
     const createCharts = () => {
       $('#chart-wrapper').empty()
-      props.chartData.forEach((data_chart, index) => {
+      let chartDT = [{1:5,2:4, 3:4,4:5,5:6,6:7,title:"LienChieu"},{1:5,2:4, 3:4,4:5,5:6,6:7,title:"Hoa Khanh"}]
+      chartDT.forEach((data_chart, index) => {
         const canvasId = 'myCanvas' + index;
         const canvasContainer = document.createElement('div');
         canvasContainer.classList.add('chart-container');
