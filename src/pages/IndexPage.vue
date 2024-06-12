@@ -1,13 +1,18 @@
 <template>
-  <div ref="mapRoot" class="mapView">
-    <q-page-sticky class="stickyClass" position="top-left" :offset="[10, 10]">
+  <div ref="mapRoot" class="mapView" >
+      <q-page-sticky class="stickyClass" position="top-left" :offset="[10,10 ]"   >
       <FloatControl data-html2canvas-ignore v-bind="{ map: map, view: view }" :chartData="data"
         @closePopup="closePopup" />
     </q-page-sticky>
-    <q-page-sticky class="stickyClass" position="top-left" :offset="[stickCenterX, 10]">
+    <q-page-sticky class="stickyClass"  style="justify-self: center; width: 50%;" position="top" :offset="[10 ,10 ]"   >
+      <div class="horizontal-layout">
+        <div id="search">Search Component</div>
+        <button class="op_modal_btn" @click="wms_layers">Open Modal</button>
+      </div>
+    </q-page-sticky>
+    <q-page-sticky class="stickyClass" position="top-right" :offset="[10, 10]"> 
       <div style="display: flex; flex-direction: row; gap: 10px">
-        <div id="search"></div>
-        <button @click="wms_layers">Open Modal</button>
+        
         <FloatZoom data-html2canvas-ignore />
       </div>
     </q-page-sticky>
@@ -22,13 +27,15 @@
     <div ref="popupContent"></div>
   </div>
   <div id="legend"></div>
-  <button @click="show_hide_legend" type="button" id="legend_btn" class="btn btn-success btn-sm">☰ Show
+  <button @click="show_hide_legend" type="button" id="legend_btn" class="btn-show-legend  ">☰ Show
     Legend</button>
   <div>
     <modal v-if="showModal" @close="closeModal" class="modal_AWS">
       <modal-dialog>
         <modal-header>
-          <h3>AWS Layer</h3>
+          <h3 style="text-align: center; margin-top: 10px">AWS Layer</h3>
+          <th></th><th></th><th></th>
+          <tr><td>HoaHiepBac</td><td>HoaHiepBac</td><td></td></tr>
           <button type="button" class="close-modal" @click="closeModal">
             <span>&times;</span>
           </button>
@@ -39,7 +46,7 @@
         </modal-body>
         <modal-footer>
           <button @click="closeModal">Close</button>
-          <button @click="addLayer">Close</button>
+          <button @click="addLayer">Add Layer</button>
         </modal-footer>
       </modal-dialog>
 
@@ -544,6 +551,7 @@ export default defineComponent({
     const showModal = ref(false);
     let layer_name = ref("");
     const data = ref([]);
+  
     return {
       showModal,
       legend,
@@ -684,7 +692,7 @@ export default defineComponent({
       if (document.getElementById("legend").style.visibility == "hidden") {
 
         document.getElementById("legend_btn").innerHTML = "☰ Hide Legend";
-        document.getElementById("legend_btn").setAttribute("class", "btn btn-danger btn-sm");
+        document.getElementById("legend_btn").setAttribute("class", "btn-hide-legend");
 
         document.getElementById("legend").style.visibility = "visible";
         document.getElementById("legend").style.width = "15%";
@@ -692,7 +700,7 @@ export default defineComponent({
         document.getElementById('legend').style.height = '38%';
         unref(this.map).updateSize();
       } else {
-        document.getElementById("legend_btn").setAttribute("class", "btn btn-success btn-sm");
+        document.getElementById("legend_btn").setAttribute("class", "btn-show-legend");
         document.getElementById("legend_btn").innerHTML = "☰ Show Legend";
         document.getElementById("legend").style.width = "0%";
         document.getElementById("legend").style.visibility = "hidden";
@@ -845,11 +853,49 @@ body {
   z-index: 600;
   bottom: 2%;
   right: 0%;
+  height: 35px;
+  border-radius: 5px;
+  color: black;
+
+  font-weight: bold;
 }
 #search{
   min-width: 300px;
   margin-left: 20px;
+  height: 40px;
   display: flex;
-  align-items: center
+  align-items: center;
+  // justify-content:center;
+  background-color: #fff;
+  border-radius: 15px;  
+}
+
+.op_modal_btn{
+  background: linear-gradient(140deg, #00FF00 0%, #00FF33 50%, #00FF66 100%);
+  color: #484848;
+  border-radius: 10px;
+  margin-left: 50px;
+  height: 40px;
+  padding: 5px 30px 5px 30px;
+}
+.btn-show-legend
+{
+  background-color: rgb(9, 212, 46);
+  color: #fff;
+
+}
+.btn-hide-legend
+{
+  background-color: rgb(212, 9, 36);
+  color: #fff;
+}
+
+.horizontal-layout {
+  display: flex;
+  justify-content: center; /* Centers the items horizontally within the container */
+  align-items: center;     /* Vertically centers the items (optional) */
+  gap: 10px;               /* Adds space between the items */
+  width: 100%;             /* Ensures the layout takes the full width of the container */
+  height: 50px; 
 }
 </style>

@@ -1,46 +1,12 @@
 <template>
   <div style="display: flex; flex-direction: row; gap: 10px; max-height: 56px;">
-    <q-btn-group
-      outline
-      color="white"
-      style="flex-direction: column; gap: 2px"
-    >
-      <q-btn
-        color="secondary"
-        text-color="white"
-        round
-        icon="add"
-        size="sm"
-        class="circle shadow-3"
-        @click="zoom('in')"
-      >
-        <q-tooltip anchor="center right" self="center start">{{
-          $t("Zoom in")
-        }}</q-tooltip>
-      </q-btn>
-      <q-space />
-      <q-btn
-        color="secondary"
-        text-color="white"
-        round
-        icon="remove"
-        size="sm"
-        class="circle shadow-3"
-        @click="zoom('out')"
-      >
-        <q-tooltip anchor="center right" self="center start">{{
-          $t("Zoom out")
-        }}</q-tooltip>
-      </q-btn>
-    </q-btn-group>
     <div style="align-items: center; display: flex">
       <q-fab
         square
-        color="secondary"
         icon="layers"
         active-icon="layers"
         direction="down"
-        style="width: 56px; height: 56px"
+        style="width: 56px; height: 56px; background-color: #FFCC33;"
         padding="0"
       >
         <q-fab-action
@@ -56,6 +22,39 @@
       </q-fab-action>
       </q-fab>
     </div>
+    <q-btn-group
+      outline
+      color="white"
+      style="flex-direction: column; gap: 2px"
+    >
+    <q-btn 
+      text-color="black"
+      round
+      icon="add"
+      size="sm"
+      class="circle shadow-3"
+      @click="zoom('in')"
+    >
+
+        <q-tooltip anchor="center right" self="center start">{{
+          $t("Zoom in")
+        }}</q-tooltip>
+      </q-btn>
+      <q-space />
+      <q-btn
+        text-color="gray"
+        round
+        icon="remove"
+        size="sm"
+        class="circle shadow-3"
+        @click="zoom('out')"
+      >
+        <q-tooltip anchor="center right" self="center start">{{
+          $t("Zoom out")
+        }}</q-tooltip>
+      </q-btn>
+    </q-btn-group>
+    
   </div>
 </template>
 
@@ -173,5 +172,7 @@ body {
 
 .circle {
   border-radius: 50% !important;
+  background-color:#FFCC33 ;
 }
-</style>
+
+</style>  

@@ -11,4 +11,21 @@
 #gcd-button-control
 {
     display: none !important;
+
 }
+.ol-control{
+    background-color: #fff !important;
+}
+#gcd-input-query{
+    border: none ;
+    outline: none;
+    margin-left: 40px;
+ }
+ .q-drawer__content
+ {
+    background-color: #dddddd !important; 
+ }
+ .q-item.q-router-link--active, .q-item--active{
+    color: #fff !important;
+    background: linear-gradient(140deg, rgba(0, 77, 102, 0.5) 0%, rgba(0, 134, 179, 0.9) 50%, rgba(0, 191, 255, 1) 100%);
+ }

@@ -522,7 +522,7 @@ export default defineComponent({
 }
 
 .ol-tooltip-static {
-  background-color: #ffcc33;
+  background-color: #FFCC33;
   color: black;
   border: 1px solid white;
 }

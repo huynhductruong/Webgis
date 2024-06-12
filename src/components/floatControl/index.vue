@@ -1,7 +1,7 @@
 <template>
   <div>
     <q-card class="my-card" flat bordered style="">
-      <q-tabs v-model="tabModel" class="bg-secondary text-white" style="min-height: 56px;">
+      <q-tabs v-model="tabModel" class=" text-black" style="min-height: 56px;">
         <q-tab v-for="(tab, index) of tabList" :key="index" :label="tab.label" :name="tab.component" @click="() => {
           expanded = true;
         }
@@ -119,5 +119,9 @@ body {
 .panelClass {
   padding: 0;
   display: grid;
+}
+
+.text-black{
+  background-color: #FFCC33;
 }
 </style>
