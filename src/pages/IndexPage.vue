@@ -848,7 +848,7 @@ body {
 }
 #search{
   min-width: 300px;
-  margin-left: 20px;
+  margin-left: 50px;
   display: flex;
   align-items: center
 }
