@@ -88,14 +88,6 @@ export default defineComponent({
     const value = ref(true)
     const visibleColumns = ref([ 'email', 'name','role', 'activate'])
     const columns = computed(() => [
-      {
-        name: 'id',
-        required: true,
-        label: 'Id',
-        align: 'left',
-        field: row => row.id,
-        format: val => `${val}`,
-      },
       { name: 'email', align: 'center', label: $t('Email'), field: 'email', sortable: true },
       { name: 'name', align: 'center', label: $t('Name'), field: 'name', sortable: true },
       { name: 'role', align: 'center', label: $t('Role'), field: 'role', sortable: true },
@@ -126,6 +118,7 @@ export default defineComponent({
     }
     const getAllUser = async() => {
       const response = await getAll()
+      console.log(response.data);
         return response
     }
     const rows = ref([])

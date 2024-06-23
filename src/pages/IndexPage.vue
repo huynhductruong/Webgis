@@ -7,12 +7,12 @@
     <q-page-sticky class="stickyClass" style="justify-self: center; width: 50%;" position="top" :offset="[10, 10]">
       <div class="horizontal-layout">
         <div id="search"></div>
-        <button class="op_modal_btn" @click="wms_layers">Thêm layer</button>
       </div>
     </q-page-sticky>
     <q-page-sticky class="stickyClass" position="top-right" :offset="[10, 10]">
-      <div style="display: flex; flex-direction: row; gap: 10px">
-
+      <div style="display: flex; align-items:center; gap: 10px">
+        <button class="btn_add_layer" @click="wms_layers('HienTrangSDD')">Hiện Trạng</button>
+        <button class="btn_add_layer" @click="wms_layers('AnhVienTham')">Viễn Thám</button>
         <FloatZoom data-html2canvas-ignore />
       </div>
     </q-page-sticky>
@@ -34,7 +34,6 @@
       <modal-dialog>
         <modal-header>
           <h3 class="modal-title">Danh sách các layer</h3>
-          <span class="close-modal" @click="closeModal">&#10060;</span>
         </modal-header>
         <modal-body>
           <table id="table_wms_layers">
@@ -471,7 +470,12 @@ export default defineComponent({
     const map = ref(null);
 
     const overlayers = ref(new LayerGroup({
-      title: 'Overlays',
+      title: 'Hiện Trạng Sử Dụng Đất',
+      layers: [],
+    }));
+
+    const overlayers_VT = ref(new LayerGroup({
+      title: 'Ảnh Viễn Thám',
       layers: [],
     }));
     provide("map", map);
@@ -530,6 +534,7 @@ export default defineComponent({
       });
       initPopupEvent();
       unref(map).addLayer(unref(baseMaps))
+      unref(map).addLayer(unref(overlayers_VT))
       unref(map).addLayer(unref(overlayers))
       unref(map).addLayer(unref(layerForImage))
       unref(map).addControl(unref(layerSwitcher))
@@ -548,15 +553,17 @@ export default defineComponent({
     const showModal = ref(false);
     let layer_name = ref("");
     const data = ref([]);
-
+    let workspace = ref(null);
     return {
       showModal,
+      workspace,
       legend,
       data,
       layer_name,
       layerSwitcher,
       overlayers,
       overlay,
+      overlayers_VT,
       map,
       view,
       showDetail,
@@ -577,12 +584,14 @@ export default defineComponent({
 
     },
     closeModal() {
+      this.layer_name = "";
       this.showModal = false;
     },
-    async wms_layers() {
+    async wms_layers(workspace) {
+      this.workspace = workspace
       try {
         this.showModal = true;
-        const response = await fetch("http://localhost:8084/geoserver/HienTrangSDD/wms?request=getCapabilities");
+        const response = await fetch(`http://localhost:8084/geoserver/${workspace}/wms?request=getCapabilities`);
         const xml = await response.text();
 
         const parser = new DOMParser();
@@ -591,7 +600,7 @@ export default defineComponent({
         const layers = xmlDoc.querySelectorAll("Layer > Layer");
         const table = document.getElementById("table_wms_layers");
 
-        table.innerHTML = '<tr"><th style="min-width: 30%;">Name</th><th  style="min-width: 30%;">Title</th><th  style="min-width: 40%;">Abstract</th></tr>';
+        table.innerHTML = '<tr style="background-color: rgb(122, 209, 100)"><th style="min-width: 30%; max-width: 30%;">Name</th><th  style="min-width: 30%; max-width: 30%;">Title</th><th  style="min-width: 40%; max-width: 40%;">Abstract</th></tr>';
 
         layers.forEach(layer => {
           const name = layer.querySelector("Name").textContent;
@@ -599,7 +608,7 @@ export default defineComponent({
           const abstract = layer.querySelector("Abstract").textContent;
 
           const row = document.createElement("tr");
-          row.innerHTML = `<td style="min-width: 30%;">${name}</td><td style="min-width: 30%;">${title}</td><td style="min-width: 40%;">${abstract}</td>`;
+          row.innerHTML = `<td style="min-width: 30%; max-width: 30%;">${name}</td><td style="min-width: 30%; max-width: 30%;">${title}</td><td style="min-width: 40%; max-width: 40%;">${abstract}</td>`;
           table.appendChild(row);
         });
 
@@ -638,11 +647,10 @@ export default defineComponent({
       }
     },
     async addLayer() {
-
       const layer_wms = new ImageLayer({
         title: this.layer_name,
         source: new ImageWMS({
-          url: 'http://localhost:8084/geoserver/HienTrangSDD/wms',
+          url: `http://localhost:8084/geoserver/${this.workspace}/wms`,
           params: {
             'LAYERS': this.layer_name
           },
@@ -650,16 +658,15 @@ export default defineComponent({
           serverType: 'geoserver'
         })
       });
-      this.overlayers.getLayers().push(layer_wms)
-      const url = 'http://localhost:8084/geoserver/HienTrangSDD/wms?request=getCapabilities';
 
+
+      const url = 'http://localhost:8084/geoserver/HienTrangSDD1/wms?request=getCapabilities';
       axios.get(url) // Use axios to make GET request
         .then(response => {
           const parser = new WMSCapabilities();
           const result = parser.read(response.data);
           const layers = result.Capability.Layer.Layer;
           let extent;
-
           for (let i = 0; i < layers.length; i++) {
             const layerobj = layers[i];
             if (layerobj.Name === this.layer_name) {
@@ -677,12 +684,19 @@ export default defineComponent({
         .catch(error => {
           console.error('Error fetching capabilities:', error);
         });
-      this.layerSwitcher.renderPanel()
-      this.legend();
+      
       this.showModal = false;
-      let chartData_custom = await this.getFeatureGridCodes(this.layer_name)
-      chartData_custom.title = this.layer_name
-      this.data = [...this.data, chartData_custom]
+      if (this.workspace === "HienTrangSDD") {
+        this.overlayers.getLayers().push(layer_wms)
+        this.legend();
+        let chartData_custom = await this.getFeatureGridCodes(this.layer_name)
+        chartData_custom.title = this.layer_name
+        this.data = [...this.data, chartData_custom]
+      }
+      else {
+        this.overlayers_VT.getLayers().push(layer_wms)
+      }
+      this.layerSwitcher.renderPanel()
     },
     show_hide_legend() {
 
@@ -714,7 +728,7 @@ export default defineComponent({
           let new_data = {}
           for (let i = 1; i <= 6; i++) {
             const count = array.reduce((sum, item) => {
-              if(item.properties.gridcode === i) return sum + item.properties.Shape_Area
+              if (item.properties.gridcode === i) return sum + item.properties.Shape_Area
               return sum
             }, 0.0);
             new_data = {
@@ -818,11 +832,13 @@ body {
 }
 
 #table_wms_layers {
-  white-space: nowrap;
   grid-template-areas: "head-fixed" "body-scrollable";
   width: 100%;
   background-color: #fff;
   padding: 0px 10px 0px 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 #table_wms_layers th {
@@ -866,23 +882,13 @@ body {
 }
 
 #search {
-  min-width: 300px;
-  margin-left: 150px;
+  min-width: 250px;
   height: 40px;
   display: flex;
   align-items: center;
   // justify-content:center;
   background-color: #fff;
   border-radius: 15px;
-}
-
-.op_modal_btn {
-  background: linear-gradient(140deg, #00FF00 0%, #00FF33 50%, #00FF66 100%);
-  color: #484848;
-  border-radius: 10px;
-  margin-left: 50px;
-  height: 40px;
-  padding: 5px 30px 5px 30px;
 }
 
 .btn-show-legend {
@@ -898,14 +904,11 @@ body {
 .horizontal-layout {
   display: flex;
   justify-content: center;
-  /* Centers the items horizontally within the container */
   align-items: center;
-  /* Vertically centers the items (optional) */
   gap: 10px;
-  /* Adds space between the items */
   width: 100%;
-  /* Ensures the layout takes the full width of the container */
   height: 50px;
+  margin-top: 5px;
 }
 
 .modal-title {
@@ -936,6 +939,22 @@ body {
       color: #fff;
       transition: ease .3s;
     }
+  }
+
+}
+
+.btn_add_layer {
+  background: linear-gradient(140deg, #00FF00 0%, #00FF33 50%, #00FF66 100%);
+  color: #484848;
+  border-radius: 10px;
+  height: 40px;
+  padding: 5px 20px 5px 20px;
+  font-weight: bold;
+
+  &:hover {
+    background: linear-gradient(140deg, #e5ff00 0%, #ff0062 50%, #66ff00 100%);
+    color: #fff;
+    transition: ease .3s;
   }
 }
 </style>

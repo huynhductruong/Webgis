@@ -44,16 +44,22 @@
     height: 100%;
     background-color: rgb(122, 209, 100)
 }
+#q-notify
+{
+    display: none;
+}
 #table_wms_layers tr
 {
     display: flex;
     width: 100%;
-    height: 30px;
+    min-height: 30px;
     align-items: center;
+    border-bottom: solid 1px gray;
     td
     {
         cursor: pointer;
-        padding-left: 10%;
+        padding-left: 5%;
+        white-space:pre-line;
     }
 }
 

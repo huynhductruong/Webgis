@@ -63,7 +63,6 @@
                 rounded
                 label="Login"
               ></q-btn>
-              <GoogleLogin :callback="callback" popup-type="TOKEN" />
             </div>
           </q-form>
         </q-card-section>
@@ -74,27 +73,9 @@
 
 <script>
 import { defineComponent, getCurrentInstance, ref, unref } from "vue";
-import { decodeCredential, googleTokenLogin } from "vue3-google-login";
-// import { login } from 'src/api/user'
 import { useUserStore } from "stores/user";
-import { login } from "src/api/user";
 import { useRoute, useRouter } from "vue-router";
 
-/*
-aud:""
-azp: ""
-email: ""
-email_verified:true
-exp:
-family_name: ""
-given_name: ""
-iat: 
-iss:"https://accounts.google.com"
-jti: ""
-name:""
-nbf: 
-picture:""
-sub:"" */
 export default defineComponent({
   name: "LoginPage",
   setup() {
@@ -116,22 +97,14 @@ export default defineComponent({
         (val) => /^(?=.*\d).{6,}$/.test(val) || "Minimum six characters",
       ],
     };
-    const callback = async (responseGoogle) => {
-      const userData = decodeCredential(responseGoogle.credential);
-      const response = await store.loginGoogleUser({
-        ...userData,
-        password: "123456",
-      });
-      if (response) {
-        router.push({ name: "HomePage" });
-      }
-    };
+    
 
     const onSubmit = async () => {
       const response = await store.loginUser({
         email: unref(username),
         password: unref(password),
       });
+      console.log(response);
       if (response instanceof Error) {
         error.value = response.response.data.error
         unref(formRef).validate();
@@ -152,7 +125,6 @@ export default defineComponent({
       username,
       password,
       rules,
-      callback,
       onSubmit,
       clearError,
     };

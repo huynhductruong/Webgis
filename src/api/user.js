@@ -1,7 +1,7 @@
 import { api } from 'boot/axios';
 
 export const login = async (params) => {
-  const response = await api.post('login', params)
+  const response = await api.post('http://localhost:5000/users/login', params)
   return response.data
 }
 
@@ -41,8 +41,8 @@ export const findByEmail = async (params) => {
   return response
 }
 
-export const getAll = async (params) => {
-  const response = await api.get('users', params);
+export const getAll = async () => {
+  const response = await api.get('http://localhost:5000/users');
   return response.data
 }
 

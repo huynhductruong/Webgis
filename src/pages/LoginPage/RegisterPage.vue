@@ -81,7 +81,7 @@
 <script>
 import { defineComponent, ref, unref } from "vue";
 import { useUserStore } from "stores/user";
-import { findByEmail } from "src/api/user";
+z
 import { useRoute, useRouter } from "vue-router";
 export default defineComponent({
   name: "RegisterPage",

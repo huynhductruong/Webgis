@@ -2,20 +2,15 @@
   <q-layout view="hHh Lpr lFf">
     <q-header class="cus-header" elevated>
       <q-toolbar>
-        <q-btn
-          flat
-          dense
-          round
-          icon="menu"
-          aria-label="Menu"
-          @click="toggleLeftDrawer"
-        />
+        <q-btn flat dense round icon="menu" aria-label="Menu" @click="toggleLeftDrawer" />
 
-      <q-toolbar-title>
-        <q-icon class="logo">
-          <img src="~assets/gis-logo.png" alt="">
-        </q-icon>
-      </q-toolbar-title>
+        <q-toolbar-title>
+          <a href="/map">
+            <q-icon class="logo">
+              <img src="~assets/gis-logo.png" alt="">
+            </q-icon>
+          </a>
+        </q-toolbar-title>
 
         <q-avatar>
           <img v-if="profile?.picture" :src="profile?.picture">
@@ -23,31 +18,13 @@
         </q-avatar>
       </q-toolbar>
     </q-header>
-    <q-drawer
-      v-model="leftDrawerOpen"
-      show-if-above
-      elevated
-      side="left"
-      behavior="desktop"
-      >
+    <q-drawer v-model="leftDrawerOpen" show-if-above elevated side="left" behavior="desktop">
       <q-list>
-        <EssentialLink
-          v-for="link in essentialLinks"
-          :key="link.title"
-          v-bind="link"
-        />
+        <EssentialLink v-for="link in essentialLinks" :key="link.title" v-bind="link" />
         <q-separator />
-        <EssentialLink
-          v-for="link in adminInteraction"
-          :key="link.title"
-          v-bind="link"
-        />
+        <EssentialLink v-for="link in adminInteraction" :key="link.title" v-bind="link" />
         <q-separator />
-        <EssentialLink
-          v-for="link in userIntecraction"
-          :key="link.title"
-          v-bind="link"
-        />
+        <EssentialLink v-for="link in userIntecraction" :key="link.title" v-bind="link" />
       </q-list>
     </q-drawer>
 
@@ -80,7 +57,7 @@ export default defineComponent({
     const router = useRouter();
     const route = useRoute();
     const userStore = useUserStore();
-    const { role, profile } = userStore.getUser;
+    const { role } = userStore.getUser;
     const leftDrawerOpen = ref(true);
     const miniState = ref(true);
     const linksList = computed(() => [
@@ -102,41 +79,29 @@ export default defineComponent({
         icon: "img:icons/location-management.png",
         to: "/location-management",
         show: role === 'ADMIN',
-      },
-      {
-        title: $t("Projections management"),
-        icon: "img:icons/coordinate.png",
-        to: "/projection-management",
-        show: role === 'ADMIN',
-      },
-
+      }
     ])
     const userIntecraction = computed(() => [
       {
-        title: $t("Profile"),
-        icon: "account_circle",
-        to: "/profile",
-      },
-      {
         title: $t("Settings"),
         icon: "settings",
-       },
+      },
       {
         title: $t("Logout"),
         icon: "logout",
         action: () => {
           userStore.clearUser();
-          router.push({name: 'LoginPage'})
+          router.push({ name: 'LoginPage' })
         },
       },
     ]);
-    
+
     onBeforeMount(() => {
       if (route.path === '/') {
-        router.replace({name: 'HomePage'})
+        router.replace({ name: 'HomePage' })
       }
     })
-    
+
     return {
       vm,
       essentialLinks: linksList,
@@ -144,7 +109,6 @@ export default defineComponent({
       userIntecraction,
       leftDrawerOpen,
       miniState,
-      profile,
       toggleLeftDrawer() {
         leftDrawerOpen.value = !leftDrawerOpen.value;
       },
@@ -155,16 +119,17 @@ export default defineComponent({
 
 <style lang="scss">
 html,
-body{
+body {
   width: 100%;
   height: 100%;
 }
 
 
-.cus-header{
+.cus-header {
   background-color: black;
 }
-.logo{
+
+.logo {
   width: 90px;
   height: 70px;
 }
