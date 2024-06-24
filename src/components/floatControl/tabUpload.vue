@@ -451,4 +451,9 @@ export default defineComponent({
 .col {
   color: black;  
 }
+
+.q-uploader__title{
+  font-weight: normal;
+  font-size: 12px;
+}
 </style>

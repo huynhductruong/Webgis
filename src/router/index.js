@@ -16,22 +16,23 @@ export default route(function (/* { store, ssrContext } */) {
   })
 
   Router.beforeEach((to, from, next) => {
-    const userStore = useUserStore();
-    const { role } = userStore.getUser
-    if (to?.meta?.authRequired) {
-      if (role === 'ADMIN') {
-        next()
-      } else {
-        next({ name: 'HomePage' })
-      }
-    } else if (to?.meta?.public){
-      next()
-    }
-    else {
-      if (!userStore.getIsLogin) {
-        next({ path: '/login' })
-      } else next()
-    }
+    // const userStore = useUserStore();
+    // const { role } = userStore.getUser
+    // if (to?.meta?.authRequired) {
+    //   if (role === 'ADMIN') {
+    //     next()
+    //   } else {
+    //     next({ name: 'HomePage' })
+    //   }
+    // } else if (to?.meta?.public){
+    //   next()
+    // }
+    // else {
+    //   if (!userStore.getIsLogin) {
+    //     next({ path: '/login' })
+    //   } else next()
+    // }
+    next()
 });
   return Router
 })
