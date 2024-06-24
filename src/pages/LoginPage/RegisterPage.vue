@@ -1,29 +1,29 @@
 <template>
-  <img src="~assets/background.jpg" class="wave" alt="login-wave">
+  <img src="~assets/lovepik-blue-science-and-technology-map-background-image_400054037.jpg" class="wave" alt="login-wave">
   <div class="row" style="height: 90vh">
-    <div class="col-0 col-md-6 flex justify-center content-center"></div>
+    <!-- <div class="col-0 col-md-6 flex justify-center content-center"></div> -->
     <div
       v-bind:class="{
         'justify-center': $q.screen.md || $q.screen.sm || $q.screen.xs,
       }"
-      class="col-12 col-md-6 flex content-center"
+      class="col-12 col-md-6 flex content-center justify-center align-center"
     >
       <q-card
         v-bind:style="$q.screen.lt.sm ? { width: '80%' } : { width: '50%' }"
       >
         <q-card-section class="row items-start justify-center q-mt-lg">
-          <q-avatar size="103px" class="absolute-center shadow-10">
+          <q-avatar size="100px" class="absolute-center shadow-10 move-down">
             <img
               src="~assets/bach-khoa.jpg"
               alt="Quasar logo"
-              style="width: 80px; height: 80px"
+              style="width: 90px; height: 90px"
             />
           </q-avatar>
         </q-card-section>
         <q-card-section>
           <div class="q-pt-lg">
             <div class="col text-h6 ellipsis flex justify-center">
-              <h2 class="text-h4 text-uppercase q-my-none text-weight-regular">
+              <h2 class="text-h4 text-uppercase q-my-none text-weight-regular move-down">
                 {{ $t("Register") }}
               </h2>
             </div>
@@ -60,9 +60,6 @@
               lazy-rules
             />
             <div class="googleSection">
-              <router-link class="text-primary" to="/login"
-                >{{ $t("Login here") }}</router-link
-              >
               <q-btn
                 class="full-width"
                 color="primary"
@@ -70,6 +67,9 @@
                 type="submit"
                 rounded
               ></q-btn>
+              <router-link class="text-primary" to="/login"
+                >{{ $t("Login here") }}</router-link
+              >
             </div>
           </q-form>
         </q-card-section>
@@ -81,7 +81,6 @@
 <script>
 import { defineComponent, ref, unref } from "vue";
 import { useUserStore } from "stores/user";
-z
 import { useRoute, useRouter } from "vue-router";
 export default defineComponent({
   name: "RegisterPage",
@@ -151,5 +150,8 @@ export default defineComponent({
   display: flex;
   flex-direction: column;
   gap: 10px;
+}
+.move-down {
+  margin-top: 20px;
 }
 </style>

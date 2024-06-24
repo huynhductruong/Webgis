@@ -2,7 +2,7 @@
   <div>
     <q-card class="my-card" flat bordered style="">
       <q-tabs v-model="tabModel" class=" text-black" style="min-height: 56px;">
-        <q-tab v-for="(tab, index) of tabList" :key="index" :label="tab.label" :name="tab.component" @click="() => {
+        <q-tab class="text" v-for="(tab, index) of tabList" :key="index" :label="tab.label" :name="tab.component" @click="() => {
           expanded = true;
         }
           " />
@@ -123,5 +123,10 @@ body {
 
 .text-black{
   background-color: #FFCC33;
+  font-weight: normal;
+  font-size: 50px;
+}
+.text {
+  font-size:  50px;
 }
 </style>

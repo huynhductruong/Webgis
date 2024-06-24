@@ -1,7 +1,7 @@
 <template>
   <div ref="mapRoot" class="mapView">
-    <q-page-sticky class="stickyClass" style="z-index: 999999999;" position="top-left" :offset="[10, 10]">
-      <FloatControl data-html2canvas-ignore v-bind="{ map: map, view: view }" :chartData="data"
+    <q-page-sticky class="stickyClass font" style="z-index: 999999999;" position="top-left" :offset="[10, 10]">
+      <FloatControl data-html2canvas-ignore v-bind="{ map: map, view: view }" :chartData="data "
         @closePopup="closePopup" />
     </q-page-sticky>
     <q-page-sticky class="stickyClass" style="justify-self: center; width: 50%;" position="top" :offset="[10, 10]">
@@ -949,7 +949,9 @@ body {
   border-radius: 10px;
   height: 40px;
   padding: 5px 20px 5px 20px;
-  font-weight: bold;
+  // font-weight: bold;
+  font-weight: normal;
+  font-size: 12px;
 
   &:hover {
     background: linear-gradient(140deg, #e5ff00 0%, #ff0062 50%, #66ff00 100%);

@@ -78,7 +78,7 @@ export default defineComponent({
         title: $t("Locations management"),
         icon: "img:icons/location-management.png",
         to: "/location-management",
-        show: role === 'ADMIN',
+        show: true,
       }
     ])
     const userIntecraction = computed(() => [
